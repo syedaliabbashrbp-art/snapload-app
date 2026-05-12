@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SnapLoad — Complete Guide</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--card:#13131e;--border:#22223a;
+  --accent:#7c3aed;--accent2:#06b6d4;--green:#10b981;--red:#f43f5e;--yellow:#f59e0b;
+  --text:#e8e8f0;--muted:#6b7280;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.page{max-width:900px;margin:0 auto;padding:2rem 1rem 5rem}
+
+/* HERO */
+.hero{text-align:center;padding:3rem 1rem 2rem;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,.18) 0%,transparent 70%)}
+.hero-badge{display:inline-block;background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(6,182,212,.2));border:1px solid rgba(124,58,237,.4);border-radius:100px;padding:.3rem 1rem;font-size:.72rem;font-weight:600;color:var(--accent2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem}
+.hero h1{font-size:clamp(2.2rem,7vw,3.8rem);font-weight:900;background:linear-gradient(135deg,#fff 0%,var(--accent2) 50%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
+.hero p{color:var(--muted);margin-top:.8rem;font-size:1rem}
+
+/* TOC */
+.toc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin:2rem 0}
+.toc h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:1rem}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.5rem}
+.toc a{display:flex;align-items:center;gap:.5rem;padding:.5rem .8rem;border-radius:8px;text-decoration:none;color:var(--text);font-size:.85rem;border:1px solid var(--border);transition:all .2s}
+.toc a:hover{border-color:var(--accent);color:var(--accent2);background:rgba(124,58,237,.05)}
+.toc-num{width:22px;height:22px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;flex-shrink:0}
+
+/* PHASE HEADER */
+.phase{margin:3rem 0 1.5rem;padding:1.2rem 1.5rem;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(6,182,212,.08));border:1px solid rgba(124,58,237,.25);border-radius:14px}
+.phase-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--accent2);margin-bottom:.3rem}
+.phase h2{font-size:1.4rem;font-weight:800;color:#fff}
+.phase p{color:var(--muted);font-size:.88rem;margin-top:.3rem}
+
+/* STEP */
+.step{margin:1.5rem 0}
+.step-header{display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem}
+.step-num{width:32px;height:32px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:#fff;flex-shrink:0}
+.step-title{font-size:1rem;font-weight:700;color:#fff}
+.step-body{padding-left:2.5rem}
+.step-body p{color:#c4c4d4;font-size:.88rem;margin-bottom:.6rem;line-height:1.7}
+.step-body ul,ol{color:#c4c4d4;font-size:.88rem;padding-left:1.2rem;margin-bottom:.8rem}
+.step-body li{margin:.3rem 0;line-height:1.6}
+.step-body strong{color:#fff}
+
+/* FILE CARD */
+.file-card{margin:1rem 0;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.file-header{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1rem;background:#1a1a2e;cursor:pointer;user-select:none}
+.file-header-left{display:flex;align-items:center;gap:.7rem}
+.file-icon{font-size:1rem}
+.file-name{font-size:.85rem;font-weight:600;color:#fff;font-family:monospace}
+.file-path{font-size:.72rem;color:var(--muted)}
+.file-tag{font-size:.68rem;padding:.15rem .5rem;border-radius:6px;font-weight:600}
+.tag-dart{background:rgba(6,182,212,.15);color:var(--accent2)}
+.tag-js{background:rgba(245,158,11,.15);color:var(--yellow)}
+.tag-yaml{background:rgba(124,58,237,.15);color:#a78bfa}
+.tag-xml{background:rgba(244,63,94,.15);color:#fb7185}
+.tag-json{background:rgba(16,185,129,.15);color:var(--green)}
+.copy-btn{background:var(--accent);border:none;border-radius:6px;padding:.25rem .65rem;color:#fff;font-size:.72rem;font-weight:600;cursor:pointer;transition:opacity .2s}
+.copy-btn:hover{opacity:.8}
+.copy-btn.done{background:var(--green)}
+pre{background:#0d0d16;padding:1.2rem;overflow-x:auto;font-size:.75rem;line-height:1.7;color:#c9d1d9;font-family:'Fira Code','Courier New',monospace;max-height:400px;overflow-y:auto}
+pre::-webkit-scrollbar{width:6px;height:6px}
+pre::-webkit-scrollbar-track{background:#1a1a2e}
+pre::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* INFO BOX */
+.info-box{padding:1rem 1.1rem;border-radius:10px;font-size:.83rem;margin:.8rem 0;line-height:1.7}
+.info-box.tip{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);color:#6ee7b7}
+.info-box.warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:#fcd34d}
+.info-box.note{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.25);color:#c4b5fd}
+.info-box strong{color:#fff}
+
+/* URL BOX */
+.url-box{display:flex;align-items:center;gap:.6rem;background:#0d0d16;border:1px solid var(--border);border-radius:10px;padding:.75rem 1rem;margin:.6rem 0;font-family:monospace;font-size:.83rem;color:var(--accent2);overflow-x:auto}
+
+/* DIVIDER */
+hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+
+/* CHECKLIST */
+.checklist{list-style:none;padding:0;margin:.5rem 0}
+.checklist li{display:flex;align-items:flex-start;gap:.6rem;padding:.4rem 0;font-size:.88rem;color:#c4c4d4;border-bottom:1px solid rgba(255,255,255,.04)}
+.checklist li:last-child{border-bottom:none}
+.check{width:20px;height:20px;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--green);flex-shrink:0;margin-top:2px}
+
+/* EARNING TABLE */
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin:.8rem 0}
+th{background:#1a1a2e;color:var(--muted);text-align:left;padding:.6rem .9rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}
+td{padding:.6rem .9rem;border-bottom:1px solid var(--border);color:#c4c4d4}
+tr:last-child td{border-bottom:none}
+td:last-child{color:var(--green);font-weight:600}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .toc-grid{grid-template-columns:1fr 1fr}
+  pre{font-size:.7rem}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">📱 Complete Developer Guide</div>
+  <h1>SnapLoad</h1>
+  <p>Saari files + Step-by-step instructions — ek jagah<br>
+  Backend · Flutter App · AdMob · Play Store</p>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h3>📋 Contents</h3>
+  <div class="toc-grid">
+    <a href="#phase1"><span class="toc-num">1</span>Backend Files</a>
+    <a href="#phase2"><span class="toc-num">2</span>Flutter App Files</a>
+    <a href="#phase3"><span class="toc-num">3</span>Backend Deploy</a>
+    <a href="#phase4"><span class="toc-num">4</span>Flutter Setup</a>
+    <a href="#phase5"><span class="toc-num">5</span>AdMob Setup</a>
+    <a href="#phase6"><span class="toc-num">6</span>Play Store</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PHASE 1: BACKEND FILES -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="phase" id="phase1">
+  <div class="phase-label">Phase 1 — Backend</div>
+  <h2>🖥️ Backend Files</h2>
+  <p>Yeh Node.js server Railway.app pe deploy hoga. 4 files hain.</p>
+</div>
+
+<div class="info-box note">
+  <strong>📁 Folder structure:</strong><br>
+  Apne computer pe ek folder banao jiska naam <strong>snapload-backend</strong> ho. Neeche diye saare files us folder mein banao.
+</div>
+
+<!-- server.js -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <div class="step-title">server.js — Main Backend Server</div>
+  </div>
+  <div class="step-body">
+    <p>Yeh poora backend hai — Express server, cobalt API calls, aur download endpoints.</p>
+    <div class="file-card">
+      <div class="file-header" onclick="toggleCode(this)">
+        <div class="file-header-left">
+          <span class="file-icon">📄</span>
+          <div>
+            <div class="file-name">server.js</div>
+            <div class="file-path">snapload-backend/server.js</div>
+          </div>
+          <span class="file-tag tag-js">JavaScript</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+      </div>
+      <pre>require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const fetch = require('node-fetch');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(helmet());
+app.use(cors({ origin: '*', methods: ['GET', 'POST'] }));
+app.use(express.json());
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { error: 'Too many requests, please try again later.' }
+});
+app.use('/api/', limiter);
+
+function detectPlatform(url) {
+  const u = url.toLowerCase();
+  if (u.includes('tiktok.com') || u.includes('vm.tiktok') || u.includes('vt.tiktok')) return 'tiktok';
+  if (u.includes('youtube.com') || u.includes('youtu.be')) return 'youtube';
+  if (u.includes('instagram.com')) return 'instagram';
+  if (u.includes('twitter.com') || u.includes('x.com') || u.includes('t.co')) return 'twitter';
+  if (u.includes('facebook.com') || u.includes('fb.watch')) return 'facebook';
+  if (u.includes('reddit.com') || u.includes('redd.it')) return 'reddit';
+  return 'unknown';
+}
+
+async function callCobalt(videoUrl, options = {}) {
+  const instances = [
+    'https://api.cobalt.tools',
+    'https://cobalt.pussthecat.org',
+    'https://co.wuk.sh',
+  ];
+  for (const base of instances) {
+    try {
+      const res = await fetch(`${base}/api/json`, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: videoUrl,
+          vQuality: options.quality || '720',
+          aFormat: options.audioFormat || 'mp3',
+          isAudioOnly: options.audioOnly || false,
+          isNoTTWatermark: true,
+          isTTFullAudio: false,
+          isAudioMuted: false,
+          dubLang: false,
+          disableMetadata: false,
+        }),
+      });
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (data.status === 'error' || data.status === 'rate-limit') continue;
+      return { success: true, data, source: base };
+    } catch (e) {
+      console.warn(`Cobalt instance ${base} failed:`, e.message);
+      continue;
+    }
+  }
+  throw new Error('All cobalt instances failed');
+}
+
+function formatResponse(data, platform, audioOnly) {
+  const links = [];
+  if (['redirect', 'stream', 'tunnel'].includes(data.status)) {
+    links.push({
+      type: audioOnly ? 'audio' : 'video',
+      quality: audioOnly ? 'MP3' : 'Video',
+      url: data.url,
+      filename: audioOnly ? 'audio.mp3' : `${platform}_video.mp4`,
+    });
+  } else if (data.status === 'picker') {
+    (data.picker || []).forEach((item, i) => {
+      links.push({
+        type: item.type === 'photo' ? 'image' : 'video',
+        quality: item.type === 'photo' ? 'Image' : `Video ${i + 1}`,
+        url: item.url,
+        filename: item.type === 'photo' ? `image_${i+1}.jpg` : `video_${i+1}.mp4`,
+      });
+    });
+    if (data.audio) links.push({ type: 'audio', quality: 'Audio', url: data.audio, filename: 'audio.mp3' });
+  }
+  return links;
+}
+
+app.get('/', (req, res) => {
+  res.json({ app: 'SnapLoad Backend', version: '1.0.0', status: 'running' });
+});
+
+app.post('/api/download', async (req, res) => {
+  const { url, quality = '720', audioOnly = false, audioFormat = 'mp3' } = req.body;
+  if (!url) return res.status(400).json({ success: false, error: 'URL required' });
+  try { new URL(url); } catch {
+    return res.status(400).json({ success: false, error: 'Invalid URL' });
+  }
+  const platform = detectPlatform(url);
+  if (platform === 'unknown') {
+    return res.status(400).json({ success: false, error: 'Platform not supported' });
+  }
+  try {
+    const result = await callCobalt(url, { quality, audioOnly, audioFormat });
+    const links = formatResponse(result.data, platform, audioOnly);
+    if (!links.length) return res.status(500).json({ success: false, error: 'No links found' });
+    return res.json({ success: true, platform, links, count: links.length });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: 'Download failed.', details: err.message });
+  }
+});
+
+app.use((req, res) => res.status(404).json({ error: 'Route not found' }));
+
+app.listen(PORT, () => {
+  console.log(`✅ SnapLoad Backend running on port ${PORT}`);
+});</pre>
+    </div>
+  </div>
+</div>
+
+<!-- package.json -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">2</div>
+    <div class="step-title">package.json — Dependencies</div>
+  </div>
+  <div class="step-body">
+    <div class="file-card">
+      <div class="file-header" onclick="toggleCode(this)">
+        <div class="file-header-left">
+          <span class="file-icon">📦</span>
+          <div>
+            <div class="file-name">package.json</div>
+            <div class="file-path">snapload-backend/package.json</div>
+          </div>
+          <span class="file-tag tag-json">JSON</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+      </div>
+      <pre>{
+  "name": "snapload-backend",
+  "version": "1.0.0",
+  "description": "SnapLoad Video Downloader Backend API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "node-fetch": "^2.7.0",
+    "dotenv": "^16.3.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- railway.toml -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">3</div>
+    <div class="step-title">railway.toml — Deploy Config</div>
+  </div>
+  <div class="step-body">
+    <div class="file-card">
+      <div class="file-header" onclick="toggleCode(this)">
+        <div class="file-header-left">
+          <span class="file-icon">🚂</span>
+          <div>
+            <div class="file-name">railway.toml</div>
+            <div class="file-path">snapload-backend/railway.toml</div>
+          </div>
+          <span class="file-tag tag-yaml">TOML</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+      </div>
+      <pre>[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3</pre>
+    </div>
+  </div>
+</div>
+
+<!-- .gitignore -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">4</div>
+    <div class="step-title">.gitignore</div>
+  </div>
+  <div class="step-body">
+    <div class="file-card">
+      <div class="file-header" onclick="toggleCode(this)">
+        <div class="file-header-left">
+          <span class="file-icon">🙈</span>
+          <div>
+            <div class="file-name">.gitignore</div>
+            <div class="file-path">snapload-backend/.gitignore</div>
+          </div>
+          <span class="file-tag tag-json">Text</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+      </div>
+      <pre>node_modules/
+.env
+*.log</pre>
+    </div>
+  </div>
+</div>
+
+<hr/>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PHASE 2: FLUTTER FILES -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="phase" id="phase2">
+  <div class="phase-label">Phase 2 — Flutter App</div>
+  <h2>📱 Flutter App Files</h2>
+  <p>10 files hain. Flutter create karne ke baad inhe copy karein.</p>
+</div>
+
+<div class="info-box note">
+  <strong>📁 Folder structure:</strong><br>
+  <code>flutter create snapload</code> command se project banao. Phir neeche diye files apni jagah pe rakho.
+</div>
+
+<!-- pubspec.yaml -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <div class="step-title">pubspec.yaml — Dependencies</div>
+  </div>
+  <div class="step-body">
+    <p>Existing <strong>pubspec.yaml</strong> ka content replace karo is se:</p>
+    <div class="file-card">
+      <div class="file-header" onclick="toggleCode(this)">
+        <div class="file-header-left">
+          <span class="file-icon">📦</span>
+          <div><div class="file-name">pubspec.yaml</div><div class="file-path">snapload/pubspec.yaml</div></div>
+          <span class="file-tag tag-yaml">YAML</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+      </div>
+      <pre>name: snapload
+description: SnapLoad - Video Downloader
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.1.0
+  url_launcher: ^6.2.2
+  permission_handler: ^11.1.0
+  path_provider: ^2.1.1
+  shared_preferences: ^2.2.2
+  google_mobile_ads: ^4.0.0
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true</pre>
+    </div>
+  </div>
+</div>
+
+<!-- main.dart -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">2</div>
+    <div class="step-title">main.dart — App Entry Point</div>
+  </div>
+  <div class="step-body">
+    <div class="file-card">
+      <div class="file-header" onclick="toggleCode(this)">
+        <div class="file-header-left">
+          <span class="file-icon">🎯</span>
+          <div><div class="file-name">main.dart</div><div class="file-path">lib/main.dart</div></div>
+          <span class="file-tag tag-dart">Dart</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+      </div>
+      <pre>import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'screens/home_screen.dart';
+import 'screens/splash_screen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await MobileAds.instance.initialize();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.light,
+  ));
+  runApp(const SnapLoadApp());
+}
+
+class SnapLoadApp extends StatelessWidget {
+  const SnapLoadApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'SnapLoad',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF0A0A0F),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF7C3AED),
+          secondary: Color(0xFF06B6D4),
+        ),
+      ),
+      home: const SplashScreen(),
+    );
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- download_result.dart -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">3</div>
+    <div class="step-title">download_result.dart — Data Model</div>
+  </div>
+  <div class="step-body">
+    <p>Pehle <strong>lib/models/</strong> folder banao, phir yeh file us mein rakho.</p>
+    <div class="file-card">
+      <div class="file-header" onclick="toggleCode(this)">
+        <div class="file-header-left">
+          <span class="file-icon">📊</span>
+          <div><div class="file-name">download_result.dart</div><div class="file-path">lib/models/download_result.dart</div></div>
+          <span class="file-tag tag-dart">Dart</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+      </div>
+      <pre>class DownloadLink {
+  final String type;
+  final String quality;
+  final String url;
+  final String filename;
+
+  DownloadLink({required this.type, required this.quality, required this.url, required this.filename});
+
+  factory DownloadLink.fromJson(Map&lt;String, dynamic&gt; json) {
+    return DownloadLink(
+      type:     json['type']     ?? 'video',
+      quality:  json['quality']  ?? 'Video',
+      url:      json['url']      ?? '',
+      filename: json['filename'] ?? 'video.mp4',
+    );
+  }
+}
+
+class DownloadResult {
+  final bool success;
+  final String platform;
+  final List&lt;DownloadLink&gt; links;
+  final String? error;
+
+  DownloadResult({required this.success, required this.platform, required this.links, this.error});
+
+  factory DownloadResult.fromJson(Map&lt;String, dynamic&gt; json) {
+    final rawLinks = json['links'] as List&lt;dynamic&gt;? ?? [];
+    return DownloadResult(
+      success:  json['success']  ?? false,
+      platform: json['platform'] ?? 'unknown',
+      links:    rawLinks.map((l) =&gt; DownloadLink.fromJson(l)).toList(),
+      error:    json['error'],
+    );
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- api_service.dart -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">4</div>
+    <div class="step-title">api_service.dart — Backend Connection</div>
+  </div>
+  <div class="step-body">
+    <p><strong>lib/services/</strong> folder banao. <code>YOUR-APP</code> ki jagah apna Railway URL daalo baad mein.</p>
+    <div class="file-card">
+      <div class="file-header" onclick="toggleCode(this)">
+        <div class="file-header-left">
+          <span class="file-icon">🌐</span>
+          <div><div class="file-name">api_service.dart</div><div class="file-path">lib/services/api_service.dart</div></div>
+          <span class="file-tag tag-dart">Dart</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+      </div>
+      <pre>import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../models/download_result.dart';
+
+class ApiService {
+  // ⚠️ Yahan apna Railway URL daalo deploy ke baad
+  static const String _baseUrl = 'https://YOUR-APP.up.railway.app';
+
+  static Future&lt;DownloadResult&gt; getDownloadLinks({
+    required String url,
+    String quality = '720',
+    bool audioOnly = false,
+    String audioFormat = 'mp3',
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/api/download'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'url': url,
+          'quality': quality,
+          'audioOnly': audioOnly,
+          'audioFormat': audioFormat,
+        }),
+      ).timeout(const Duration(seconds: 20));
+
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200 &amp;&amp; data['success'] == true) {
+        return DownloadResult.fromJson(data);
+      } else {
+        throw Exception(data['error'] ?? 'Download failed');
+      }
+    } on Exception catch (e) {
+      throw Exception('Network error: ${e.toString()}');
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- ad_service.dart -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">5</div>
+    <div class="step-title">ad_service.dart — AdMob Ads</div>
+  </div>
+  <div class="step-body">
+    <div class="file-card">
+      <div class="file-header" onclick="toggleCode(this)">
+        <div class="file-header-left">
+          <span class="file-icon">💰</span>
+          <div><div class="file-name">ad_service.dart</div><div class="file-path">lib/services/ad_service.dart</div></div>
+          <span class="file-tag tag-dart">Dart</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+      </div>
+      <pre>import 'dart:io';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+class AdService {
+  // TEST IDs — Real IDs AdMob account se milenge
+  static String get bannerAdUnitId =&gt; Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/6300978111'
+      : 'ca-app-pub-3940256099942544/2934735716';
+
+  static String get interstitialAdUnitId =&gt; Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/1033173712'
+      : 'ca-app-pub-3940256099942544/4411468910';
+
+  InterstitialAd? _interstitialAd;
+  int _downloadCount = 0;
+
+  void loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) { _interstitialAd = ad; },
+        onAdFailedToLoad: (error) { _interstitialAd = null; },
+      ),
+    );
+  }
+
+  void showInterstitialIfReady() {
+    _downloadCount++;
+    if (_downloadCount % 3 == 0 &amp;&amp; _interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (ad) {
+          ad.dispose();
+          loadInterstitialAd();
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          ad.dispose();
+          loadInterstitialAd();
+        },
+      );
+      _interstitialAd!.show();
+      _interstitialAd = null;
+    }
+  }
+
+  void dispose() { _interstitialAd?.dispose(); }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- splash_screen.dart -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">6</div>
+    <div class="step-title">splash_screen.dart — Opening Screen</div>
+  </div>
+  <div class="step-body">
+    <p><strong>lib/screens/</strong> folder banao.</p>
+    <div class="file-card">
+      <div class="file-header" onclick="toggleCode(this)">
+        <div class="file-header-left">
+          <span class="file-icon">✨</span>
+          <div><div class="file-name">splash_screen.dart</div><div class="file-path">lib/screens/splash_screen.dart</div></div>
+          <span class="file-tag tag-dart">Dart</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+      </div>
+      <pre>import 'package:flutter/material.dart';
+import 'dart:async';
+import 'home_screen.dart';
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+  @override
+  State&lt;SplashScreen&gt; createState() =&gt; _SplashScreenState();
+}
+
+class _SplashScreenState extends State&lt;SplashScreen&gt;
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation&lt;double&gt; _fade, _scale;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
+    _fade  = Tween&lt;double&gt;(begin: 0, end: 1).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeIn));
+    _scale = Tween&lt;double&gt;(begin: 0.7, end: 1).animate(CurvedAnimation(parent: _ctrl, curve: Curves.elasticOut));
+    _ctrl.forward();
+    Timer(const Duration(milliseconds: 2500), () {
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) =&gt; const HomeScreen(),
+          transitionDuration: const Duration(milliseconds: 500),
+          transitionsBuilder: (_, anim, __, child) =&gt; FadeTransition(opacity: anim, child: child),
+        ),
+      );
+    });
+  }
+
+  @override
+  void dispose() { _ctrl.dispose(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A0A0F),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment(-0.3, -0.5), radius: 1.2,
+            colors: [Color(0xFF2D1B69), Color(0xFF0A0A0F)],
+          ),
+        ),
+        child: Center(
+          child: FadeTransition(
+            opacity: _fade,
+            child: ScaleTransition(
+              scale: _scale,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 100, height: 100,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF7C3AED), Color(0xFF06B6D4)],
+                        begin: Alignment.topLeft, end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: [BoxShadow(color: const Color(0xFF7C3AED).withOpacity(0.5), blurRadius: 30, spreadRadius: 5)],
+                    ),
+                    child: const Icon(Icons.download_rounded, color: Colors.white, size: 52),
+                  ),
+                  const SizedBox(height: 24),
+                  ShaderMask(
+                    shaderCallback: (b) =&gt; const LinearGradient(
+                      colors: [Colors.white, Color(0xFF06B6D4), Color(0xFF7C3AED)],
+                    ).createShader(b),
+                    child: const Text('SnapLoad',
+                      style: TextStyle(fontSize: 42, fontWeight: FontWeight.w900, color: Colors.white)),
+                  ),
+                  const SizedBox(height: 8),
+                  Text('Download Any Video',
+                    style: TextStyle(fontSize: 15, color: Colors.white.withOpacity(0.5), letterSpacing: 1)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- home_screen.dart -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">7</div>
+    <div class="step-title">home_screen.dart — Main Screen (Full UI)</div>
+  </div>
+  <div class="step-body">
+    <div class="file-card">
+      <div class="file-header" onclick="toggleCode(this)">
+        <div class="file-header-left">
+          <span class="file-icon">🏠</span>
+          <div><div class="file-name">home_screen.dart</div><div class="file-path">lib/screens/home_screen.dart</div></div>
+          <span class="file-tag tag-dart">Dart</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+      </div>
+      <pre>import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../services/api_service.dart';
+import '../services/ad_service.dart';
+import '../models/download_result.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+  @override
+  State&lt;HomeScreen&gt; createState() =&gt; _HomeScreenState();
+}
+
+class _HomeScreenState extends State&lt;HomeScreen&gt; with TickerProviderStateMixin {
+  final TextEditingController _urlCtrl = TextEditingController();
+  final AdService _ads = AdService();
+  bool _loading = false;
+  DownloadResult? _result;
+  String? _error;
+  String _quality = '720';
+  bool _audioOnly = false;
+  BannerAd? _bannerAd;
+  bool _bannerLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _ads.loadInterstitialAd();
+    _loadBanner();
+    _autoPaste();
+  }
+
+  void _loadBanner() {
+    _bannerAd = BannerAd(
+      adUnitId: AdService.bannerAdUnitId,
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) =&gt; setState(() =&gt; _bannerLoaded = true),
+        onAdFailedToLoad: (ad, _) { ad.dispose(); _bannerAd = null; },
+      ),
+    )..load();
+  }
+
+  Future&lt;void&gt; _autoPaste() async {
+    try {
+      final d = await Clipboard.getData('text/plain');
+      final t = d?.text ?? '';
+      if (t.startsWith('http') &amp;&amp;
+          (t.contains('tiktok') || t.contains('youtu') || t.contains('instagram') || t.contains('twitter') || t.contains('x.com'))) {
+        setState(() =&gt; _urlCtrl.text = t);
+      }
+    } catch (_) {}
+  }
+
+  Future&lt;void&gt; _paste() async {
+    try {
+      final d = await Clipboard.getData('text/plain');
+      if (d?.text != null) setState(() { _urlCtrl.text = d!.text!.trim(); _result = null; _error = null; });
+    } catch (_) {}
+  }
+
+  String _platform(String url) {
+    final u = url.toLowerCase();
+    if (u.contains('tiktok')) return 'TikTok';
+    if (u.contains('youtu'))  return 'YouTube';
+    if (u.contains('instagram')) return 'Instagram';
+    if (u.contains('twitter') || u.contains('x.com')) return 'Twitter/X';
+    if (u.contains('facebook')) return 'Facebook';
+    return 'Video';
+  }
+
+  Future&lt;void&gt; _download() async {
+    final url = _urlCtrl.text.trim();
+    if (url.isEmpty) { _snack('Video link paste karein'); return; }
+    if (!url.startsWith('http')) { _snack('Valid URL enter karein'); return; }
+    setState(() { _loading = true; _result = null; _error = null; });
+    FocusScope.of(context).unfocus();
+    try {
+      final r = await ApiService.getDownloadLinks(url: url, quality: _quality, audioOnly: _audioOnly);
+      setState(() { _loading = false; _result = r; });
+      _ads.showInterstitialIfReady();
+    } catch (e) {
+      setState(() { _loading = false; _error = e.toString().replaceAll('Exception: ', ''); });
+    }
+  }
+
+  void _snack(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(msg), behavior: SnackBarBehavior.floating,
+      backgroundColor: const Color(0xFF1A1A26),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    ));
+  }
+
+  Future&lt;void&gt; _openLink(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+
+  @override
+  void dispose() { _urlCtrl.dispose(); _ads.dispose(); _bannerAd?.dispose(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A0A0F),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  // Header
+                  Row(children: [
+                    Container(
+                      width: 40, height: 40,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(colors: [Color(0xFF7C3AED), Color(0xFF06B6D4)]),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(Icons.download_rounded, color: Colors.white, size: 22),
+                    ),
+                    const SizedBox(width: 10),
+                    const Text('SnapLoad', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Colors.white)),
+                    const Spacer(),
+                    if (_urlCtrl.text.isNotEmpty || _result != null)
+                      GestureDetector(
+                        onTap: () =&gt; setState(() { _urlCtrl.clear(); _result = null; _error = null; }),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(color: const Color(0xFF1A1A26), borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFF2A2A3D))),
+                          child: const Text('Clear', style: TextStyle(color: Colors.white54, fontSize: 12)),
+                        ),
+                      ),
+                  ]),
+                  const SizedBox(height: 20),
+
+                  // Platform chips
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(children: [
+                      _chip('♪ TikTok', const Color(0xFF00F2EA)),
+                      _chip('▶ YouTube', const Color(0xFFFF4444)),
+                      _chip('◈ Instagram', const Color(0xFFE4405F)),
+                      _chip('✦ Twitter', const Color(0xFF1DA1F2)),
+                      _chip('📘 Facebook', const Color(0xFF1877F2)),
+                    ]),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Input card
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1A1A26), borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: const Color(0xFF2A2A3D)),
+                    ),
+                    child: Column(children: [
+                      if (_urlCtrl.text.isNotEmpty)
+                        Container(
+                          width: double.infinity, padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF0D1F1A),
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                            border: Border(bottom: BorderSide(color: Color(0xFF1E3A2F))),
+                          ),
+                          child: Row(children: [
+                            const Icon(Icons.check_circle, color: Color(0xFF10B981), size: 14),
+                            const SizedBox(width: 6),
+                            Text('${_platform(_urlCtrl.text)} link detect hua ✓',
+                              style: const TextStyle(color: Color(0xFF10B981), fontSize: 12, fontWeight: FontWeight.w600)),
+                          ]),
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          const Text('Video ka link', style: TextStyle(color: Colors.white54, fontSize: 12)),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: _urlCtrl,
+                            onChanged: (_) =&gt; setState(() {}),
+                            style: const TextStyle(color: Colors.white, fontSize: 14),
+                            decoration: InputDecoration(
+                              hintText: 'https://vt.tiktok.com/... ya youtu.be/...',
+                              hintStyle: TextStyle(color: Colors.white.withOpacity(0.25), fontSize: 13),
+                              border: InputBorder.none, isDense: true, contentPadding: EdgeInsets.zero,
+                            ),
+                            keyboardType: TextInputType.url, autocorrect: false,
+                          ),
+                          const SizedBox(height: 12),
+                          GestureDetector(
+                            onTap: _paste,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                              decoration: BoxDecoration(color: const Color(0xFF2A2A3D), borderRadius: BorderRadius.circular(10)),
+                              child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                                Icon(Icons.content_paste_rounded, color: Colors.white70, size: 15),
+                                SizedBox(width: 6),
+                                Text('Clipboard se Paste', style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.w500)),
+                              ]),
+                            ),
+                          ),
+                        ]),
+                      ),
+                    ]),
+                  ),
+                  const SizedBox(height: 14),
+
+                  // Options
+                  Row(children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(color: const Color(0xFF1A1A26), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF2A2A3D))),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          const Text('Quality', style: TextStyle(color: Colors.white54, fontSize: 11)),
+                          DropdownButtonHideUnderline(
+                            child: DropdownButton&lt;String&gt;(
+                              value: _quality, dropdownColor: const Color(0xFF1A1A26),
+                              style: const TextStyle(color: Colors.white, fontSize: 13),
+                              icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white54),
+                              items: const [
+                                DropdownMenuItem(value: 'max',  child: Text('Maximum')),
+                                DropdownMenuItem(value: '1080', child: Text('1080p')),
+                                DropdownMenuItem(value: '720',  child: Text('720p HD')),
+                                DropdownMenuItem(value: '480',  child: Text('480p')),
+                                DropdownMenuItem(value: '360',  child: Text('360p')),
+                              ],
+                              onChanged: (v) =&gt; setState(() =&gt; _quality = v!),
+                            ),
+                          ),
+                        ]),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(color: const Color(0xFF1A1A26), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF2A2A3D))),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        const Text('Sirf Audio', style: TextStyle(color: Colors.white54, fontSize: 11)),
+                        Switch(value: _audioOnly, onChanged: (v) =&gt; setState(() =&gt; _audioOnly = v),
+                          activeColor: const Color(0xFF7C3AED), materialTapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                      ]),
+                    ),
+                  ]),
+                  const SizedBox(height: 18),
+
+                  // Download button
+                  GestureDetector(
+                    onTap: _loading ? null : _download,
+                    child: Container(
+                      width: double.infinity, padding: const EdgeInsets.symmetric(vertical: 16),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: _loading
+                              ? [const Color(0xFF4B2E9E), const Color(0xFF3B2070)]
+                              : [const Color(0xFF7C3AED), const Color(0xFF6D28D9)],
+                        ),
+                        borderRadius: BorderRadius.circular(14),
+                        boxShadow: [BoxShadow(color: const Color(0xFF7C3AED).withOpacity(0.4), blurRadius: 20, offset: const Offset(0, 6))],
+                      ),
+                      child: Center(child: _loading
+                          ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
+                          : Row(mainAxisSize: MainAxisSize.min, children: [
+                              Icon(_audioOnly ? Icons.music_note_rounded : Icons.download_rounded, color: Colors.white, size: 20),
+                              const SizedBox(width: 8),
+                              Text(_audioOnly ? 'Audio Download' : 'Video Download',
+                                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                            ]),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+
+                  // Loading
+                  if (_loading) Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(color: const Color(0xFF1A1A26), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF2A2A3D))),
+                    child: Column(children: [
+                      const LinearProgressIndicator(backgroundColor: Color(0xFF2A2A3D), valueColor: AlwaysStoppedAnimation(Color(0xFF7C3AED))),
+                      const SizedBox(height: 10),
+                      Text('Download link dhundha ja raha hai...', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13)),
+                    ]),
+                  ),
+
+                  // Error
+                  if (_error != null) Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(color: const Color(0xFF1F0F0F), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFFf43f5e).withOpacity(0.3))),
+                    child: Row(children: [
+                      const Icon(Icons.warning_amber_rounded, color: Color(0xFFfb7185), size: 20),
+                      const SizedBox(width: 10),
+                      Expanded(child: Text(_error!, style: const TextStyle(color: Color(0xFFfb7185), fontSize: 13, height: 1.5))),
+                    ]),
+                  ),
+
+                  // Results
+                  if (_result != null) Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    const Row(children: [
+                      Icon(Icons.check_circle_rounded, color: Color(0xFF10B981), size: 18),
+                      SizedBox(width: 8),
+                      Text('Download Ready!', style: TextStyle(color: Color(0xFF10B981), fontSize: 13, fontWeight: FontWeight.w700)),
+                    ]),
+                    const SizedBox(height: 12),
+                    ..._result!.links.map((link) =&gt; Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(color: const Color(0xFF12121A), borderRadius: BorderRadius.circular(14), border: Border.all(color: const Color(0xFF2A2A3D))),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        leading: Container(
+                          width: 40, height: 40,
+                          decoration: BoxDecoration(
+                            color: (link.type == 'audio' ? const Color(0xFF10B981) : const Color(0xFF7C3AED)).withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(link.type == 'audio' ? Icons.music_note_rounded : Icons.videocam_rounded,
+                            color: link.type == 'audio' ? const Color(0xFF10B981) : const Color(0xFF7C3AED), size: 20),
+                        ),
+                        title: Text(link.quality, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
+                        subtitle: Text(link.filename, style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
+                        trailing: GestureDetector(
+                          onTap: () =&gt; _openLink(link.url),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(colors: [Color(0xFF06B6D4), Color(0xFF0891B2)]),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Text('⬇ Save', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                          ),
+                        ),
+                      ),
+                    )),
+                  ]),
+
+                  const SizedBox(height: 20),
+                ]),
+              ),
+            ),
+            // Banner Ad
+            if (_bannerLoaded &amp;&amp; _bannerAd != null)
+              SizedBox(width: _bannerAd!.size.width.toDouble(), height: _bannerAd!.size.height.toDouble(), child: AdWidget(ad: _bannerAd!)),
+            const SizedBox(height: 6),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _chip(String label, Color color) {
+    return Container(
+      margin: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(100), border: Border.all(color: color.withOpacity(0.4))),
+      child: Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
+    );
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- AndroidManifest.xml -->
+<div class="step">
+  <div class="step-header">
+    <div class="step-num">8</div>
+    <div class="step-title">AndroidManifest.xml — Android Permissions</div>
+  </div>
+  <div class="step-body">
+    <p>Existing <strong>android/app/src/main/AndroidManifest.xml</strong> ka content replace karo:</p>
+    <div class="file-card">
+      <div class="file-header" onclick="toggleCode(this)">
+        <div class="file-header-left">
+          <span class="file-icon">🤖</span>
+          <div><div class="file-name">AndroidManifest.xml</div><div class="file-path">android/app/src/main/AndroidManifest.xml</div></div>
+          <span class="file-tag tag-xml">XML</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(event,this)">Copy</button>
+      </div>
+      <pre>&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"&gt;
+  &lt;uses-permission android:name="android.permission.INTERNET"/&gt;
+  &lt;uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/&gt;
+  &lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29"/&gt;
+  &lt;uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/&gt;
+  &lt;uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/&gt;
+
+  &lt;application
+      android:label="SnapLoad"
+      android:name="${applicationName}"
+      android:icon="@mipmap/ic_launcher"
+      android:usesCleartextTraffic="true"&gt;
+
+    &lt;activity
+        android:name=".MainActivity"
+        android:exported="true"
+        android:launchMode="singleTop"
+        android:theme="@style/LaunchTheme"
+        android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+        android:hardwareAccelerated="true"
+        android:windowSoftInputMode="adjustResize"&gt;
+
+      &lt;meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme"/&gt;
+
+      &lt;intent-filter&gt;
+        &lt;action android:name="android.intent.action.MAIN"/&gt;
+        &lt;category android:name="android.intent.category.LAUNCHER"/&gt;
+      &lt;/intent-filter&gt;
+
+      &lt;intent-filter&gt;
+        &lt;action android:name="android.intent.action.SEND"/&gt;
+        &lt;category android:name="android.intent.category.DEFAULT"/&gt;
+        &lt;data android:mimeType="text/plain"/&gt;
+      &lt;/intent-filter&gt;
+    &lt;/activity&gt;
+
+    &lt;!-- AdMob App ID — apna real ID yahan daalo --&gt;
+    &lt;meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="ca-app-pub-3940256099942544~3347511713"/&gt;
+
+    &lt;meta-data android:name="flutterEmbedding" android:value="2"/&gt;
+  &lt;/application&gt;
+&lt;/manifest&gt;</pre>
+    </div>
+  </div>
+</div>
+
+<hr/>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PHASE 3: BACKEND DEPLOY -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="phase" id="phase3">
+  <div class="phase-label">Phase 3 — Deploy</div>
+  <h2>🚂 Backend Railway pe Deploy Karein</h2>
+  <p>Free mein — 500 hours/month. Koi credit card nahi chahiye.</p>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">1</div><div class="step-title">GitHub pe Upload</div></div>
+  <div class="step-body">
+    <ol>
+      <li><a href="https://github.com" target="_blank" style="color:#06b6d4">github.com</a> pe free account banao</li>
+      <li>New repository banao → naam: <strong>snapload-backend</strong></li>
+      <li>Repository mein <strong>"uploading an existing file"</strong> click karo</li>
+      <li>Yeh 4 files upload karo: <code>server.js</code>, <code>package.json</code>, <code>railway.toml</code>, <code>.gitignore</code></li>
+      <li><strong>Commit changes</strong> click karo</li>
+    </ol>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">2</div><div class="step-title">Railway pe Deploy</div></div>
+  <div class="step-body">
+    <ol>
+      <li><a href="https://railway.app" target="_blank" style="color:#06b6d4">railway.app</a> pe jaao → <strong>GitHub se login</strong> karo</li>
+      <li><strong>"New Project"</strong> → <strong>"Deploy from GitHub repo"</strong></li>
+      <li>Apna <strong>snapload-backend</strong> repo select karo</li>
+      <li>Deploy automatically shuru ho jayega — 2-3 minute wait karo</li>
+      <li>Deploy hone ke baad: <strong>Settings → Domains → Generate Domain</strong></li>
+    </ol>
+    <div class="info-box tip">
+      <strong>✅ Aapka URL kuch aisa hoga:</strong><br>
+      <code>https://snapload-backend-production.up.railway.app</code><br>
+      Yeh URL copy kar lo — Flutter app mein daalna hai.
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">3</div><div class="step-title">Test Karein</div></div>
+  <div class="step-body">
+    <p>Browser mein apna Railway URL kholo. Yeh response aana chahiye:</p>
+    <div class="url-box">{"app":"SnapLoad Backend","version":"1.0.0","status":"running"}</div>
+    <div class="info-box tip">Agar yeh response aaya — backend ready hai! ✅</div>
+  </div>
+</div>
+
+<hr/>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PHASE 4: FLUTTER SETUP -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="phase" id="phase4">
+  <div class="phase-label">Phase 4 — Flutter</div>
+  <h2>📱 Flutter App Setup & Run</h2>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">1</div><div class="step-title">Flutter Install Karein</div></div>
+  <div class="step-body">
+    <ol>
+      <li><a href="https://flutter.dev/docs/get-started/install" target="_blank" style="color:#06b6d4">flutter.dev</a> pe jaao → apna OS select karo → download karo</li>
+      <li>Install hone ke baad terminal/CMD mein chalao: <code>flutter doctor</code></li>
+      <li>Sab green checkmarks hone chahiye (Android toolchain + devices)</li>
+    </ol>
+    <div class="info-box warn"><strong>Windows pe:</strong> Android Studio bhi install karna hoga. Flutter installer mein instructions hain.</div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">2</div><div class="step-title">Project Banao & Files Copy Karo</div></div>
+  <div class="step-body">
+    <ol>
+      <li>Terminal mein chalao:</li>
+    </ol>
+    <div class="url-box">flutter create snapload && cd snapload</div>
+    <ol start="2">
+      <li>Upar diye gaye saare Dart files apni jagah copy karo:</li>
+    </ol>
+    <ul class="checklist">
+      <li><span class="check">✓</span><code>lib/main.dart</code> → replace karo</li>
+      <li><span class="check">✓</span><code>lib/models/download_result.dart</code> → naya folder + file</li>
+      <li><span class="check">✓</span><code>lib/services/api_service.dart</code> → naya folder + file</li>
+      <li><span class="check">✓</span><code>lib/services/ad_service.dart</code></li>
+      <li><span class="check">✓</span><code>lib/screens/splash_screen.dart</code> → naya folder + file</li>
+      <li><span class="check">✓</span><code>lib/screens/home_screen.dart</code></li>
+      <li><span class="check">✓</span><code>pubspec.yaml</code> → replace karo</li>
+      <li><span class="check">✓</span><code>android/app/src/main/AndroidManifest.xml</code> → replace karo</li>
+    </ul>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">3</div><div class="step-title">Railway URL Daalo</div></div>
+  <div class="step-body">
+    <p><code>lib/services/api_service.dart</code> file kholo aur yeh line edit karo:</p>
+    <div class="url-box">static const String _baseUrl = 'https://APNA-RAILWAY-URL.up.railway.app';</div>
+    <div class="info-box tip">Apna actual Railway URL daalo jo Phase 3 mein mila tha.</div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">4</div><div class="step-title">Run Karein</div></div>
+  <div class="step-body">
+    <ol>
+      <li>Phone ko USB se lagao ya emulator kholo</li>
+      <li>Terminal mein chalao:</li>
+    </ol>
+    <div class="url-box">flutter pub get</div>
+    <div class="url-box">flutter run</div>
+    <div class="info-box tip">App phone pe aa jayegi! TikTok ya YouTube ka link paste karo aur test karo.</div>
+  </div>
+</div>
+
+<hr/>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PHASE 5: ADMOB -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="phase" id="phase5">
+  <div class="phase-label">Phase 5 — Monetization</div>
+  <h2>💰 AdMob Setup — Paise Kamao</h2>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">1</div><div class="step-title">AdMob Account Banao</div></div>
+  <div class="step-body">
+    <ol>
+      <li><a href="https://admob.google.com" target="_blank" style="color:#06b6d4">admob.google.com</a> pe jaao</li>
+      <li>Google account se login karo → <strong>Get Started</strong></li>
+      <li><strong>Apps → Add App</strong> → Platform: Android → App name: SnapLoad</li>
+      <li><strong>App ID</strong> copy karo (jaise: <code>ca-app-pub-XXXX~XXXX</code>)</li>
+    </ol>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">2</div><div class="step-title">Ad Units Banao</div></div>
+  <div class="step-body">
+    <p>AdMob mein <strong>Ad Units → Create Ad Unit</strong> × 2 banao:</p>
+    <ol>
+      <li><strong>Banner Ad</strong> → Copy unit ID</li>
+      <li><strong>Interstitial Ad</strong> → Copy unit ID</li>
+    </ol>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">3</div><div class="step-title">IDs Replace Karo</div></div>
+  <div class="step-body">
+    <p><strong>lib/services/ad_service.dart</strong> mein test IDs ki jagah real IDs daalo:</p>
+    <div class="info-box warn">
+      <strong>Banner ID:</strong> <code>ca-app-pub-3940256099942544/6300978111</code> → apna ID<br>
+      <strong>Interstitial ID:</strong> <code>ca-app-pub-3940256099942544/1033173712</code> → apna ID
+    </div>
+    <p><strong>AndroidManifest.xml</strong> mein App ID daalo:</p>
+    <div class="url-box">android:value="ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX"</div>
+  </div>
+</div>
+
+<hr/>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PHASE 6: PLAY STORE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="phase" id="phase6">
+  <div class="phase-label">Phase 6 — Launch</div>
+  <h2>🚀 Play Store pe Upload</h2>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">1</div><div class="step-title">Release Build Banao</div></div>
+  <div class="step-body">
+    <div class="url-box">flutter build appbundle --release</div>
+    <p>File milegi: <code>build/app/outputs/bundle/release/app-release.aab</code></p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">2</div><div class="step-title">App Sign Karo</div></div>
+  <div class="step-body">
+    <div class="url-box">keytool -genkey -v -keystore snapload.keystore -alias snapload -keyalg RSA -keysize 2048 -validity 10000</div>
+    <div class="info-box warn"><strong>⚠️ Keystore file sambhal ke rakho!</strong> Agar ye file kho gayi to app update nahi kar sakte.</div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-header"><div class="step-num">3</div><div class="step-title">Play Console</div></div>
+  <div class="step-body">
+    <ol>
+      <li><a href="https://play.google.com/console" target="_blank" style="color:#06b6d4">play.google.com/console</a> → <strong>$25 one-time fee</strong> pay karo</li>
+      <li><strong>Create App</strong> → SnapLoad → Android</li>
+      <li><strong>.aab file upload</strong> karo</li>
+      <li>Screenshots, description, icon add karo</li>
+      <li>Privacy Policy URL daalo (free: <a href="https://privacypolicygenerator.info" target="_blank" style="color:#06b6d4">privacypolicygenerator.info</a>)</li>
+      <li><strong>Submit for Review</strong> → 3-7 din mein approve hogi</li>
+    </ol>
+    <div class="info-box tip">
+      <strong>✅ Play Store approval tips:</strong><br>
+      • App name mein "YouTube Downloader" mat likho<br>
+      • "Social Media Video Saver" ya "TikTok Saver" likho<br>
+      • Clean screenshots banao<br>
+      • Privacy policy zaroor lagao
+    </div>
+  </div>
+</div>
+
+<!-- Earning table -->
+<div style="margin-top:2rem">
+  <div class="phase-label" style="margin-bottom:.8rem">💸 Expected Earnings</div>
+  <table>
+    <tr><th>Daily Users</th><th>Daily Earning</th><th>Monthly</th></tr>
+    <tr><td>500</td><td>$1–$5</td><td>$30–$150</td></tr>
+    <tr><td>2,000</td><td>$5–$20</td><td>$150–$600</td></tr>
+    <tr><td>10,000</td><td>$25–$100</td><td>$750–$3,000</td></tr>
+    <tr><td>50,000</td><td>$100–$500</td><td>$3,000–$15,000</td></tr>
+  </table>
+</div>
+
+</div><!-- end .page -->
+
+<script>
+function toggleCode(header) {
+  const pre = header.nextElementSibling;
+  if (!pre) return;
+  pre.style.display = pre.style.display === 'none' ? 'block' : 'none';
+}
+
+function copyCode(e, btn) {
+  e.stopPropagation();
+  const pre = btn.closest('.file-card').querySelector('pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('done');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 2000);
+  });
+}
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
+  });
+});
+</script>
+</body>
+</html>

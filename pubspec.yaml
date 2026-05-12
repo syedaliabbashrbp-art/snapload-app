@@ -1,0 +1,54 @@
+name: snapload
+description: SnapLoad - Video Downloader for TikTok, YouTube, Instagram & more
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # HTTP requests
+  http: ^1.1.0
+
+  # Open URLs / download files
+  url_launcher: ^6.2.2
+  dio: ^5.4.0
+
+  # Permissions (storage)
+  permission_handler: ^11.1.0
+
+  # Save files to gallery/downloads
+  path_provider: ^2.1.1
+  open_file: ^3.3.2
+
+  # Share content
+  share_plus: ^7.2.1
+
+  # Clipboard
+  flutter_clipboard_manager: ^0.0.2
+
+  # Local storage (save settings)
+  shared_preferences: ^2.2.2
+
+  # AdMob Ads
+  google_mobile_ads: ^4.0.0
+
+  # Animations
+  lottie: ^3.0.0
+
+  # Icons
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^2.0.9
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
